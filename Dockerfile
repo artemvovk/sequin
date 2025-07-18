@@ -41,6 +41,7 @@ RUN mkdir /app
 WORKDIR /app
 
 # Install hex and rebar
+ENV ERL_FLAGS="+JMsingle true"
 RUN mix local.hex --force && \
     mix local.rebar --force
 
