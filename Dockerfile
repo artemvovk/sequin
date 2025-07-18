@@ -1,6 +1,6 @@
-ARG ELIXIR_VERSION=1.18.2
-ARG OTP_VERSION=27.2.1
-ARG DEBIAN_VERSION=buster-20240612-slim
+ARG ELIXIR_VERSION=1.18.4
+ARG OTP_VERSION=28.0.2
+ARG DEBIAN_VERSION=bookworm-20250630-slim
 ARG RELEASE_VERSION
 
 ARG BUILDER_IMAGE="hexpm/elixir:${ELIXIR_VERSION}-erlang-${OTP_VERSION}-debian-${DEBIAN_VERSION}"
@@ -31,6 +31,7 @@ ENV SENTRY_DSN=${SENTRY_DSN}
 # install build dependencies
 RUN apt-get update -y && apt-get install -y build-essential git curl \
     && apt-get clean && rm -f /var/lib/apt/lists/*_*
+RUN echo "builder" > /etc/hostname
 
 # install nodejs for build stage
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install -y nodejs
@@ -103,7 +104,7 @@ FROM ${RUNNER_IMAGE} AS app
 # Install additional packages
 # Do this before setting RELEASE_VERSION which changes on every build
 RUN apt-get update -y && \
-    apt-get install -y libstdc++6 openssl libncurses5 locales ca-certificates curl ssh jq telnet netcat htop vim \
+    apt-get install -y libstdc++6 openssl libncurses5 locales ca-certificates curl ssh jq telnet netcat-traditional htop vim \
     && apt-get clean && rm -f /var/lib/apt/lists/*_*
 
 # Copy the Sequin CLI from the cli-builder stage
